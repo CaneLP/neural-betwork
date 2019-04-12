@@ -106,22 +106,14 @@ for i in range(50):
     values_to_add = [1, home_wins_total, home_loses_total, home_draws_total, curr_match['FTHG'], curr_match['FTAG'],
                      1, away_wins_total, away_loses_total, away_draws_total, curr_match['FTAG'], curr_match['FTHG']]
 
-    for key in team[curr_match['HomeTeam']]:
-        print(team[key])
-
-    for key in team[curr_match['HomeTeam']].keys():
-        list_of_matches = team[key]
-        for match in list_of_matches:
-            print(match)
-
     if curr_match['HomeTeam'] in team:
-        for key in team[curr_match['HomeTeam']].keys:
-            list_of_matches = team[key]
-            for match in list_of_matches:
+        for key in team[curr_match['HomeTeam']]:
+            if match_index in match:
                 match[key].second = [sum(x) for x in zip(match[match_index].second, values_to_add)]
     elif curr_match['AwayTeam'] in team:
-        for key in team[curr_match['HomeTeam']].values():
-            match[key].second = [sum(x) for x in zip(match[match_index].second, values_to_add)]
+        for key in team[curr_match['AwayTeam']]:
+            if match_index in match:
+                match[key].second = [sum(x) for x in zip(match[match_index].second, values_to_add)]
     else:
         match[match_index] = ((curr_match['HomeTeam'], curr_match['AwayTeam']), [])
 
@@ -129,6 +121,7 @@ for i in range(50):
         team[curr_match['HomeTeam']] = team[curr_match['HomeTeam']] + [match_index]
     else:
         team[curr_match['HomeTeam']] = [match_index]
+
     if curr_match['AwayTeam'] in team:
         team[curr_match['AwayTeam']] = team[curr_match['AwayTeam']] + [match_index]
     else:
