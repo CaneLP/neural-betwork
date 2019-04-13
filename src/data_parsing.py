@@ -106,16 +106,16 @@ for i in range(50):
     values_to_add = [1, home_wins_total, home_loses_total, home_draws_total, curr_match['FTHG'], curr_match['FTAG'],
                      1, away_wins_total, away_loses_total, away_draws_total, curr_match['FTAG'], curr_match['FTHG']]
 
+    # Always adding new match and initialising values
+    match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+    # Check and update two teams with score of current match
     if curr_match['HomeTeam'] in team:
         for key in team[curr_match['HomeTeam']]:
-            if match_index in match:
-                match[key].second = [sum(x) for x in zip(match[match_index].second, values_to_add)]
+            match[key][1] = [sum(x) for x in list(zip(match[key][1], values_to_add))]  # key or match_index in zip?
     elif curr_match['AwayTeam'] in team:
         for key in team[curr_match['AwayTeam']]:
-            if match_index in match:
-                match[key].second = [sum(x) for x in zip(match[match_index].second, values_to_add)]
-    else:
-        match[match_index] = ((curr_match['HomeTeam'], curr_match['AwayTeam']), [])
+            match[key][1] = [sum(x) for x in list(zip(match[key][1], values_to_add))]  # key or match_index in zip?
 
     if curr_match['HomeTeam'] in team:
         team[curr_match['HomeTeam']] = team[curr_match['HomeTeam']] + [match_index]
