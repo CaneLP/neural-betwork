@@ -159,8 +159,8 @@ for i in range(len(matches)):
 # Store only the data where statistics exists for future use - profit calculation
 # Create an array with the data for the neural network input
 matches_nn_input = []
+rows_to_drop = []
 for key, value in match.items():
-    rows_to_drop = []
     if np.count_nonzero(match[key][1]) == 0 or np.count_nonzero(match[key][2]) == 0:
         # print(key, value)
         rows_to_drop.append(key)
@@ -168,70 +168,18 @@ for key, value in match.items():
         matches_nn_input.append(match[key][1][1:] + match[key][2][1:])
 
 matches = matches.drop(rows_to_drop)
+matches.index = range(len(matches))
 matches_nn_input = np.array(matches_nn_input)
 # print(matches_nn_input)
 # print(matches)
+# print(matches.shape)
 
-exit()
-
-home_teams = matches['HomeTeam']
-away_teams = matches['AwayTeam']
-home_team_goals = matches['FTHG']
-away_team_goals = matches['FTAG']
-
-all_teams = {}
-team_id = 0
-for team in home_teams:
-    if team not in all_teams:
-        all_teams[team] = team_id
-        team_id = team_id + 1
-
-# print(all_teams)
 output_class = ['H', 'D', 'A']
 
-output = matches['FTR']
-
-output_binary_results = []
-for res in output:
-    if res == 'H':
-        output_binary_results.append([1, 0, 0])
-    elif res == 'A':
-        output_binary_results.append([0, 0, 1])
-    else:
-        output_binary_results.append([0, 1, 0])
-
-# print(output_final)
-
-dataset = [[all_teams[home_teams[i]],
-            all_teams[away_teams[i]],
-            home_team_goals[i],
-            away_team_goals[i]]
-           for i in range(len(matches))]
-# print(dataset)
-
-for i in range(len(dataset)):
-    dataset[i] = dataset[i] + output_binary_results[i]
-
-# print(dataset)
-
-hidden_layer_1 = 50
-hidden_layer_2 = 25
-output = [res for res in output]
-# print(output)
-dataset = np.array(dataset)
-output_final = np.array(output)
-
-# print(dataset.shape[0])
-# print(output_final.shape[0])
-#
-# print(len(dataset))
-# print(len(output_class))
-# print(dataset)
-# print(output_final)
-# exit()
-
+full_time_results = matches['FTR']
+# print(len(full_time_results))
 output_final_ints = []
-for res in output_final:
+for res in full_time_results:
     if res == 'H':
         output_final_ints.append(1)
     elif res == 'A':
@@ -240,8 +188,11 @@ for res in output_final:
         output_final_ints.append(0)
 output_final_ints = np.array(output_final_ints)
 
+# print(output_final_ints.shape)
+# print(matches_nn_input.shape)
+
 train_input, test_input, train_output, test_output =\
-    train_test_split(dataset, output_final_ints, test_size=0.2, shuffle=False)
+    train_test_split(matches_nn_input, output_final_ints, test_size=0.2, shuffle=False)
 
 # print(train_input.shape)
 # print(train_output.shape)
@@ -252,9 +203,15 @@ train_input, test_input, train_output, test_output =\
 
 # exit()
 
-model = keras.Sequential([keras.layers.Dense(7),
+hidden_layer_1 = 50
+hidden_layer_2 = 50
+hidden_layer_3 = 50
+
+print(matches_nn_input.shape[1])
+model = keras.Sequential([keras.layers.Dense(matches_nn_input.shape[1]),
                           keras.layers.Dense(hidden_layer_1, activation=tf.nn.relu),
                           keras.layers.Dense(hidden_layer_2, activation=tf.nn.relu),
+                          keras.layers.Dense(hidden_layer_3, activation=tf.nn.relu),
                           keras.layers.Dense(len(output_class), activation=tf.nn.softmax)])
 
 model.compile(optimizer='adam',
@@ -262,15 +219,16 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 
-model.fit(train_input, train_output, epochs=5)
+model.fit(train_input, train_output, epochs=10)
 
+print("Testing...")
 test_loss, test_acc = model.evaluate(test_input, test_output)
 print('Test accuracy:', test_acc)
 
 prediction = model.predict(test_input)
 
-# for i in range(21):
-#     print(test_output[i])
-#     print(np.argmax(prediction[i]))
-#     print("-----------------------")
+for i in range(21):
+    print(test_output[i])
+    print(np.argmax(prediction[i]))
+    print("-----------------------")
 
