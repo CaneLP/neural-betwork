@@ -4,19 +4,31 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 import numpy as np
 import copy
+import os
+import glob
 from tensorflow.python.keras import activations
 # Beautify print - delete later
 import sys
 np.set_printoptions(threshold=sys.maxsize)
 
 #TODO take all files from folder data in the loop
-season_1 = pd.read_csv('../data/season_16-17.csv')
-season_2 = pd.read_csv('../data/season_17-18.csv')
-season_3 = pd.read_csv('../data/season_18-19.csv')
+path = '../data'
 
-matches = season_1.append(season_2, ignore_index=True)
-matches = matches.append(season_3, sort='False', ignore_index=True)
-# print(matches)
+files = [f for f in glob.glob(path + "**/*.csv", recursive=True)]
+
+matches = pd.DataFrame()
+
+for f in files:
+    fields = ['HomeTeam', 'AwayTeam', 'FTR', 'FTHG', 'FTAG']
+    curr_season = pd.read_csv(f, error_bad_lines=False, usecols=fields)
+    # Filter float values that were given in the data
+    curr_season.dropna(inplace=True)
+    curr_season['FTHG'] = curr_season['FTHG'].astype(int)
+    curr_season['FTAG'] = curr_season['FTAG'].astype(int)
+    matches = matches.append(curr_season, ignore_index=True, sort='False')
+
+print(matches)
+exit()
 
 last_n_games = 10
 
@@ -217,7 +229,6 @@ model = keras.Sequential([keras.layers.Dense(matches_nn_input.shape[1]),
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
-
 
 model.fit(train_input, train_output, epochs=10)
 
