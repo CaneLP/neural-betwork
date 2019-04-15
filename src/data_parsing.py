@@ -4,14 +4,11 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 import numpy as np
 import copy
-import os
 import glob
-from tensorflow.python.keras import activations
 # Beautify print - delete later
 import sys
 np.set_printoptions(threshold=sys.maxsize)
 
-#TODO take all files from folder data in the loop
 path = '../data'
 
 files = [f for f in glob.glob(path + "**/*.csv", recursive=True)]
@@ -21,49 +18,16 @@ matches = pd.DataFrame()
 for f in files:
     fields = ['HomeTeam', 'AwayTeam', 'FTR', 'FTHG', 'FTAG']
     curr_season = pd.read_csv(f, error_bad_lines=False, usecols=fields)
-    # Filter float values that were given in the data
     curr_season.dropna(inplace=True)
     curr_season['FTHG'] = curr_season['FTHG'].astype(int)
     curr_season['FTAG'] = curr_season['FTAG'].astype(int)
     matches = matches.append(curr_season, ignore_index=True, sort='False')
 
-print(matches)
-exit()
-
 last_n_games = 10
 
 #TODO
-# separate this data in class Team
+# separate data in class Team
 # add more data maybe
-# ah = at_home
-
-# home_matches = 0
-# home_wins_ah = 0
-# home_wins_total = 0
-# home_draws_ah = 0
-# home_draws_total = 0
-# home_loses_ah = 0
-# home_loses_total = 0
-# home_goals_ah = 0
-# home_goals_total = 0
-# home_goals_conceded_ah = 0
-# home_goals_conceded_total = 0
-# home_h2h_wins_ah = 0
-# home_h2h_wins_total = 0
-# home_h2h_goals_scored_ah = 0
-# home_h2h_goals_conceded_total = 0
-
-# away_matches = 0
-# away_wins_ah = 0
-# away_wins_total = 0
-# away_draws_ah = 0
-# away_draws_total = 0
-# away_loses_ah = 0
-# away_loses_total = 0
-# away_goals_scored_ah = 0
-# away_goals_total = 0
-# away_goals_conceded_ah = 0
-# away_goals_conceded_total = 0
 
 #Collecting data
 match = {}
@@ -182,14 +146,10 @@ for key, value in match.items():
 matches = matches.drop(rows_to_drop)
 matches.index = range(len(matches))
 matches_nn_input = np.array(matches_nn_input)
-# print(matches_nn_input)
-# print(matches)
-# print(matches.shape)
 
 output_class = ['H', 'D', 'A']
 
 full_time_results = matches['FTR']
-# print(len(full_time_results))
 output_final_ints = []
 for res in full_time_results:
     if res == 'H':
@@ -200,26 +160,13 @@ for res in full_time_results:
         output_final_ints.append(0)
 output_final_ints = np.array(output_final_ints)
 
-# print(output_final_ints.shape)
-# print(matches_nn_input.shape)
-
 train_input, test_input, train_output, test_output =\
     train_test_split(matches_nn_input, output_final_ints, test_size=0.2, shuffle=False)
 
-# print(train_input.shape)
-# print(train_output.shape)
-# print(train_input)
-# print(train_output)
-# print(len(train_input))
-# print(len(train_output))
+hidden_layer_1 = 20
+hidden_layer_2 = 20
+hidden_layer_3 = 20
 
-# exit()
-
-hidden_layer_1 = 50
-hidden_layer_2 = 50
-hidden_layer_3 = 50
-
-print(matches_nn_input.shape[1])
 model = keras.Sequential([keras.layers.Dense(matches_nn_input.shape[1]),
                           keras.layers.Dense(hidden_layer_1, activation=tf.nn.relu),
                           keras.layers.Dense(hidden_layer_2, activation=tf.nn.relu),
