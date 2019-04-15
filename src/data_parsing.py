@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
 import numpy as np
+import copy
 from tensorflow.python.keras import activations
 
 #TODO take all files from folder data in the loop
@@ -12,12 +13,9 @@ season_3 = pd.read_csv('../data/season_18-19.csv')
 
 matches = season_1.append(season_2, ignore_index=True)
 matches = matches.append(season_3, sort='False', ignore_index=True)
-# print(matches)
-#
-# exit()
 
 #TODO write function for this
-last_n_games = 20
+last_n_games = 10
 
 #TODO
 # separate this data in class Team
@@ -58,64 +56,10 @@ i = 0
 
 match = {}
 team = {}
-# print("----------------------")
-# print(matches.iloc[1])
-# print("----------------------")
-# exit()
-# for i in range(len(matches)):
-for i in range(50):
-    #count previous games of that home/away team
-    count_home_matches = 0
-    count_away_matches = 0
-
+for i in range(len(matches)):
     match_index = len(matches) - i
     curr_match = matches.iloc[len(matches) - i - 1]
-    home_matches = 0
-    # home_wins_ah = 0
-    home_wins_total = 0
-    # home_draws_ah = 0
-    home_draws_total = 0
-    # home_loses_ah = 0
-    home_loses_total = 0
-    # home_goals_ah = 0
-    home_goals_total = 0
-    # home_goals_conceded_ah = 0
-    home_goals_conceded_total = 0
-    away_matches = 0
-    # away_wins_ah = 0
-    away_wins_total = 0
-    # away_draws_ah = 0
-    away_draws_total = 0
-    # away_loses_ah = 0
-    away_loses_total = 0
-    # away_goals_scored_ah = 0
-    away_goals_total = 0
-    # away_goals_conceded_ah = 0
-    away_goals_conceded_total = 0
-
-    if curr_match['FTR'] == 'H':
-        home_wins_total = 1
-        away_loses_total = 1
-    elif curr_match['FTR'] == 'A':
-        away_wins_total = 1
-        home_loses_total = 1
-    else:
-        home_draws_total = 1
-        away_draws_total = 1
-
-    values_to_add = [1, home_wins_total, home_loses_total, home_draws_total, curr_match['FTHG'], curr_match['FTAG'],
-                     1, away_wins_total, away_loses_total, away_draws_total, curr_match['FTAG'], curr_match['FTHG']]
-
-    # Always adding new match and initialising values
-    match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-    # Check and update two teams with score of current match
-    if curr_match['HomeTeam'] in team:
-        for key in team[curr_match['HomeTeam']]:
-            match[key][1] = [sum(x) for x in list(zip(match[key][1], values_to_add))]  # key or match_index in zip?
-    elif curr_match['AwayTeam'] in team:
-        for key in team[curr_match['AwayTeam']]:
-            match[key][1] = [sum(x) for x in list(zip(match[key][1], values_to_add))]  # key or match_index in zip?
+    match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0] * 6, [0] * 6]
 
     if curr_match['HomeTeam'] in team:
         team[curr_match['HomeTeam']] = team[curr_match['HomeTeam']] + [match_index]
@@ -127,17 +71,90 @@ for i in range(50):
     else:
         team[curr_match['AwayTeam']] = [match_index]
 
-    for key, value in match.items():
+    if len(team[curr_match['HomeTeam']]) > last_n_games:
+        curr_team = copy.deepcopy(curr_match['HomeTeam'])
+        match_key = copy.deepcopy(team[curr_team].pop(0))
+        curr_team_matches = copy.deepcopy(team[curr_team])
+
+        games_total = 0
+        wins_total = 0
+        draws_total = 0
+        losses_total = 0
+        goals_scored_total = 0
+        goals_conceded_total = 0
+
+        for key in curr_team_matches:
+            games_total += 1
+            match_calc = matches.iloc[key - 1]
+            if match_calc['FTR'] == 'H' and match_calc['HomeTeam'] == curr_team:
+                wins_total += 1
+            elif match_calc['FTR'] == 'A' and match_calc['AwayTeam'] == curr_team:
+                wins_total += 1
+
+            if match_calc['FTR'] == 'H' and match_calc['AwayTeam'] == curr_team:
+                losses_total += 1
+            elif match_calc['FTR'] == 'A' and match_calc['HomeTeam'] == curr_team:
+                losses_total += 1
+
+            if match_calc['FTR'] == 'D':
+                draws_total += 1
+
+            if match_calc['HomeTeam'] == curr_team:
+                goals_scored_total += match_calc['FTHG']
+                goals_conceded_total += match_calc['FTAG']
+            elif match_calc['AwayTeam'] == curr_team:
+                goals_scored_total += match_calc['FTAG']
+                goals_conceded_total += match_calc['FTHG']
+
+        home_or_away = 2
+        if matches.iloc[match_key - 1]['HomeTeam'] == curr_team:
+            home_or_away = 1
+        match[match_key][home_or_away] = [games_total, wins_total, draws_total,
+                                          losses_total, goals_scored_total, goals_conceded_total]
+    if len(team[curr_match['AwayTeam']]) > last_n_games:
+        curr_team = copy.deepcopy(curr_match['AwayTeam'])
+        match_key = copy.deepcopy(team[curr_team].pop(0))
+        curr_team_matches = copy.deepcopy(team[curr_team])
+
+        games_total = 0
+        wins_total = 0
+        draws_total = 0
+        losses_total = 0
+        goals_scored_total = 0
+        goals_conceded_total = 0
+
+        for key in curr_team_matches:
+            games_total += 1
+            match_calc = matches.iloc[key - 1]
+
+            if match_calc['FTR'] == 'H' and match_calc['HomeTeam'] == curr_team:
+                wins_total += 1
+            elif match_calc['FTR'] == 'A' and match_calc['AwayTeam'] == curr_team:
+                wins_total += 1
+
+            if match_calc['FTR'] == 'H' and match_calc['AwayTeam'] == curr_team:
+                losses_total += 1
+            elif match_calc['FTR'] == 'A' and match_calc['HomeTeam'] == curr_team:
+                losses_total += 1
+
+            if match_calc['FTR'] == 'D':
+                draws_total += 1
+
+            if match_calc['HomeTeam'] == curr_team:
+                goals_scored_total += match_calc['FTHG']
+                goals_conceded_total += match_calc['FTAG']
+            elif match_calc['AwayTeam'] == curr_team:
+                goals_scored_total += match_calc['FTAG']
+                goals_conceded_total += match_calc['FTHG']
+
+        home_or_away = 2
+        if matches.iloc[match_key - 1]['HomeTeam'] == curr_team:
+            home_or_away = 1
+        match[match_key][home_or_away] = [games_total, wins_total, draws_total,
+                                          losses_total, goals_scored_total, goals_conceded_total]
+
+for key, value in match.items():
         print(key, value)
-
-    for key, value in team.items():
-        print(key, value)
-
-    print("####################################################################")
-
-    # print(match)
-    # print(team)
-
 
 exit()
 
