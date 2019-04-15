@@ -5,6 +5,9 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import copy
 from tensorflow.python.keras import activations
+# Beautify print - delete later
+import sys
+np.set_printoptions(threshold=sys.maxsize)
 
 #TODO take all files from folder data in the loop
 season_1 = pd.read_csv('../data/season_16-17.csv')
@@ -13,8 +16,8 @@ season_3 = pd.read_csv('../data/season_18-19.csv')
 
 matches = season_1.append(season_2, ignore_index=True)
 matches = matches.append(season_3, sort='False', ignore_index=True)
+# print(matches)
 
-#TODO write function for this
 last_n_games = 10
 
 #TODO
@@ -33,7 +36,6 @@ last_n_games = 10
 # home_goals_total = 0
 # home_goals_conceded_ah = 0
 # home_goals_conceded_total = 0
-# TODO h2h match not existed problem, should we add h2h at all?
 # home_h2h_wins_ah = 0
 # home_h2h_wins_total = 0
 # home_h2h_goals_scored_ah = 0
@@ -52,12 +54,10 @@ last_n_games = 10
 # away_goals_conceded_total = 0
 
 #Collecting data
-i = 0
-
 match = {}
 team = {}
 for i in range(len(matches)):
-    match_index = len(matches) - i
+    match_index = len(matches) - i - 1
     curr_match = matches.iloc[len(matches) - i - 1]
     match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0] * 6, [0] * 6]
 
@@ -85,7 +85,7 @@ for i in range(len(matches)):
 
         for key in curr_team_matches:
             games_total += 1
-            match_calc = matches.iloc[key - 1]
+            match_calc = matches.iloc[key]
             if match_calc['FTR'] == 'H' and match_calc['HomeTeam'] == curr_team:
                 wins_total += 1
             elif match_calc['FTR'] == 'A' and match_calc['AwayTeam'] == curr_team:
@@ -107,7 +107,7 @@ for i in range(len(matches)):
                 goals_conceded_total += match_calc['FTHG']
 
         home_or_away = 2
-        if matches.iloc[match_key - 1]['HomeTeam'] == curr_team:
+        if matches.iloc[match_key]['HomeTeam'] == curr_team:
             home_or_away = 1
         match[match_key][home_or_away] = [games_total, wins_total, draws_total,
                                           losses_total, goals_scored_total, goals_conceded_total]
@@ -125,7 +125,7 @@ for i in range(len(matches)):
 
         for key in curr_team_matches:
             games_total += 1
-            match_calc = matches.iloc[key - 1]
+            match_calc = matches.iloc[key]
 
             if match_calc['FTR'] == 'H' and match_calc['HomeTeam'] == curr_team:
                 wins_total += 1
@@ -148,13 +148,29 @@ for i in range(len(matches)):
                 goals_conceded_total += match_calc['FTHG']
 
         home_or_away = 2
-        if matches.iloc[match_key - 1]['HomeTeam'] == curr_team:
+        if matches.iloc[match_key]['HomeTeam'] == curr_team:
             home_or_away = 1
         match[match_key][home_or_away] = [games_total, wins_total, draws_total,
                                           losses_total, goals_scored_total, goals_conceded_total]
 
+# for key, value in match.items():
+#         print(key, value)
+
+# Store only the data where statistics exists for future use - profit calculation
+# Create an array with the data for the neural network input
+matches_nn_input = []
 for key, value in match.items():
-        print(key, value)
+    rows_to_drop = []
+    if np.count_nonzero(match[key][1]) == 0 or np.count_nonzero(match[key][2]) == 0:
+        # print(key, value)
+        rows_to_drop.append(key)
+    else:
+        matches_nn_input.append(match[key][1][1:] + match[key][2][1:])
+
+matches = matches.drop(rows_to_drop)
+matches_nn_input = np.array(matches_nn_input)
+# print(matches_nn_input)
+# print(matches)
 
 exit()
 
