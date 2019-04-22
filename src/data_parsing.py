@@ -9,6 +9,8 @@ import glob
 from tensorflow.python.keras import activations
 # Beautify print - delete later
 import sys
+# import keras.backend as K
+
 np.set_printoptions(threshold=sys.maxsize)
 
 #TODO take all files from folder data in the loop
@@ -27,8 +29,6 @@ for f in files:
     curr_season['FTAG'] = curr_season['FTAG'].astype(int)
     matches = matches.append(curr_season, ignore_index=True, sort='False')
 
-print(matches)
-exit()
 
 last_n_games = 10
 
@@ -204,7 +204,24 @@ output_final_ints = np.array(output_final_ints)
 # print(matches_nn_input.shape)
 
 train_input, test_input, train_output, test_output =\
-    train_test_split(matches_nn_input, output_final_ints, test_size=0.2, shuffle=False)
+    train_test_split(matches_nn_input, output_final_ints, test_size=0.3, shuffle=False)
+
+
+# Normalized input
+max_col_values_train = [max(l) for l in list(zip(*train_input))]
+print("max column training values:", max_col_values_train)
+
+train_input = [list(zip(line, max_col_values_train)) for line in train_input]
+train_input = [[t[0]/t[1] for t in line] for line in train_input]
+train_input = np.array(train_input)
+# print(train_input)
+
+max_col_values_test = [max(l) for l in list(zip(*test_input))]
+print("max column test values:", max_col_values_test)
+test_input = [list(zip(line, max_col_values_test)) for line in test_input]
+test_input = [[t[0]/t[1] for t in line] for line in test_input]
+test_input = np.array(test_input)
+# print(test_input)
 
 # print(train_input.shape)
 # print(train_output.shape)
@@ -215,21 +232,16 @@ train_input, test_input, train_output, test_output =\
 
 # exit()
 
-hidden_layer_1 = 50
+hidden_layer_1 = 100
 hidden_layer_2 = 50
-hidden_layer_3 = 50
 
-print(matches_nn_input.shape[1])
-model = keras.Sequential([keras.layers.Dense(matches_nn_input.shape[1]),
-                          keras.layers.Dense(hidden_layer_1, activation=tf.nn.relu),
+model = keras.Sequential([keras.layers.Dense(hidden_layer_1, input_shape=(matches_nn_input.shape[1], ), activation=tf.nn.relu),
                           keras.layers.Dense(hidden_layer_2, activation=tf.nn.relu),
-                          keras.layers.Dense(hidden_layer_3, activation=tf.nn.relu),
                           keras.layers.Dense(len(output_class), activation=tf.nn.softmax)])
 
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
-
 model.fit(train_input, train_output, epochs=10)
 
 print("Testing...")
@@ -238,8 +250,8 @@ print('Test accuracy:', test_acc)
 
 prediction = model.predict(test_input)
 
-for i in range(21):
-    print(test_output[i])
-    print(np.argmax(prediction[i]))
-    print("-----------------------")
+# for i in range(21):
+#     print(test_output[i])
+#     print(np.argmax(prediction[i]))
+#     print("-----------------------")
 
