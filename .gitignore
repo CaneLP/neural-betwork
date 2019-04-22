@@ -4,5 +4,7 @@
 */.idea
 
 # Environment
-venv/
+*/venv/
 
+# Jupyter Notebook checkpoints
+*/.ipynb_checkpoints
