@@ -1,27 +1,11 @@
 import pandas as pd
-import tensorflow as tf
-from tensorflow import keras
-from sklearn.model_selection import train_test_split
 import numpy as np
 import copy
 import glob
-# Beautify print - delete later
-import sys
-# import keras.backend as K
-
-from keras.models import Sequential
-from keras.layers.core import Dense, Activation, Dropout
-from keras.optimizers import adam, sgd, rmsprop
-
-from hyperopt import Trials, STATUS_OK, tpe
-from hyperas import optim
-from hyperas.distributions import choice, uniform
+import json
 
 
-np.set_printoptions(threshold=sys.maxsize)
-
-
-def data():
+def process_data():
     path = '../data'
 
     files = [f for f in glob.glob(path + "**/*.csv", recursive=True)]
@@ -38,11 +22,10 @@ def data():
 
     last_n_games = 10
 
-    #TODO
-    # separate data in class Team
+    # TODO
     # add more data maybe
 
-    #Collecting data
+    # Collecting data
     match = {}
     team = {}
     for i in range(len(matches)):
@@ -171,88 +154,26 @@ def data():
             output_final_ints.append(0)
     output_final_ints = np.array(output_final_ints)
 
-    train_input, test_input, train_output, test_output =\
-        train_test_split(matches_nn_input, output_final_ints, test_size=0.3, shuffle=False)
+    json_data = {}
+    for i in range(matches_nn_input.shape[0]):
+        json_data[i] = []
+        json_data[i].append({
+            'home_team_wins': int(matches_nn_input[i][0]),
+            'home_team_draws': int(matches_nn_input[i][1]),
+            'home_team_losses': int(matches_nn_input[i][2]),
+            'home_team_goals_scored': int(matches_nn_input[i][3]),
+            'home_team_goals_conceded': int(matches_nn_input[i][4]),
+            'away_team_wins': int(matches_nn_input[i][5]),
+            'away_team_draws': int(matches_nn_input[i][6]),
+            'away_team_losses': int(matches_nn_input[i][7]),
+            'away_team_goals_scored': int(matches_nn_input[i][8]),
+            'away_team_goals_conceded': int(matches_nn_input[i][9]),
+            'result': int(output_final_ints[i])
+        })
 
-
-    # Normalized input
-    max_col_values_train = [max(l) for l in list(zip(*train_input))]
-    print("max column training values:", max_col_values_train)
-
-    train_input = [list(zip(line, max_col_values_train)) for line in train_input]
-    train_input = [[t[0]/t[1] for t in line] for line in train_input]
-    train_input = np.array(train_input)
-    # print(train_input)
-
-    max_col_values_test = [max(l) for l in list(zip(*test_input))]
-    print("max column test values:", max_col_values_test)
-    test_input = [list(zip(line, max_col_values_test)) for line in test_input]
-    test_input = [[t[0]/t[1] for t in line] for line in test_input]
-    test_input = np.array(test_input)
-    # print(test_input)
-
-    return train_input, train_output, test_input, test_output, matches_nn_input
-
-
-def create_model(train_input, train_output, test_input, test_output, matches_nn_input):
-
-    output_class = ['H', 'D', 'A']
-
-    model = Sequential()
-    model.add(Dense({{choice([128, 256, 512, 1024])}}, input_shape=(matches_nn_input.shape[1], )))
-    model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-    model.add(Dense({{choice([128, 256, 512, 1024])}}))
-    model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-    # model.add(Dense({{choice([128, 256, 512, 1024])}}))
-    # model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-    model.add(Dense(len(output_class)))
-    model.add(Activation('softmax'))
-
-    adam_opt = adam(lr={{choice([10 ** -3, 10 ** -2, 10 ** -1])}})
-    sgd_opt = sgd(lr={{choice([10 ** -3, 10 ** -2, 10 ** -1])}})
-    optimizers = {{choice(['sgd', 'adam'])}}
-
-    if optimizers == 'adam':
-        optim = adam_opt
-    else:
-        optim = sgd_opt
-
-    model.compile(optimizer=optim,
-                  loss='sparse_categorical_crossentropy',
-                  metrics=['accuracy'])
-    result = model.fit(train_input, train_output, epochs={{choice([8, 9, 10, 11, 12, 13])}})
-
-    # print("Testing...")
-    # test_loss, test_acc = model.evaluate(test_input, test_output)
-    # print('Test accuracy:', test_acc)
-
-    # prediction = model.predict(test_input)
-
-    print(result.history)
-    validation_acc = np.amax(result.history['acc'])
-    return {
-        'loss': -validation_acc,
-        'status': STATUS_OK,
-        'model': model
-    }
-
-# for i in range(21):
-#     print(test_output[i])
-#     print(np.argmax(prediction[i]))
-#     print("-----------------------")
+    with open('processed_data.txt', 'w') as outfile:
+        json.dump(json_data, outfile, indent=4)
 
 
 if __name__ == '__main__':
-
-    best_run, best_model = optim.minimize(model=create_model,
-                                          data=data,
-                                          algo=tpe.suggest,
-                                          max_evals=5,
-                                          trials=Trials())
-
-    train_input, train_output, test_input, test_output, matches_nn_input = data()
-    print("---")
-    print(best_model.evaluate(test_input, test_output))
-    print("best run:")
-    print(best_run)
-
+    process_data()
