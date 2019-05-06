@@ -171,7 +171,7 @@ def process_data():
             'result': int(output_final_ints[i])
         })
 
-    with open('processed_data.txt', 'w') as outfile:
+    with open('processed_data.json', 'w') as outfile:
         json.dump(json_data, outfile, indent=4)
 
 

@@ -18,7 +18,7 @@ activation_function_choice = ['relu', 'sigmoid']
 def data():
     matches_nn_input = []
     output_final_ints = []
-    with open('processed_data.txt') as json_file:
+    with open('processed_data.json') as json_file:
         json_data = json.load(json_file)
         for (key, value) in json_data.items():
             match_nn_input = []
