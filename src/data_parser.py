@@ -6,7 +6,7 @@ import json
 
 
 def process_data():
-    path = '../data'
+    path = '../data/'
 
     files = [f for f in glob.glob(path + "**/*.csv", recursive=True)]
 

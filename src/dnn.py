@@ -9,11 +9,6 @@ from hyperas.distributions import choice, uniform
 from sklearn.model_selection import train_test_split
 import json
 
-layer_size_choice = [128, 256, 512, 1024]
-learning_rate_choice = [10 ** -3, 10 ** -2, 10 ** -1]
-epoch_num_choice = [8, 9, 10, 11, 12, 13]
-activation_function_choice = ['relu', 'sigmoid']
-
 
 def data():
     matches_nn_input = []
@@ -118,6 +113,7 @@ if __name__ == '__main__':
 
     print("---")
     print(best_model.evaluate(test_input, test_output))
+
     print("best run:")
     # print("Activation function: ", activation_function_choice[best_run['Activation']])
     print(best_run)
