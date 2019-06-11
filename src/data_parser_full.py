@@ -32,7 +32,7 @@ def process_data():
         match_index = len(matches) - i - 1
         curr_match = matches.iloc[len(matches) - i - 1]
         match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0] * 10, [0] * 10,
-                              # [curr_match['WHH'], curr_match['WHD'], curr_match['WHA']]
+                              [curr_match['WHH'], curr_match['WHD'], curr_match['WHA']]
                               ]
 
         if curr_match['HomeTeam'] in team:
@@ -174,7 +174,7 @@ def process_data():
             rows_to_drop.append(key)
         else:
             matches_nn_input.append(match[key][1][1:] + match[key][2][1:])
-            # matches_nn_input.append(match[key][3])
+            # matches_nn_input.append(match[key][1][1:] + match[key][2][1:] + match[key][3])
 
     matches = matches.drop(rows_to_drop)
     matches.index = range(len(matches))

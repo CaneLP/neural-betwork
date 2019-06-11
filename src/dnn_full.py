@@ -2,6 +2,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Dropout
 from keras.optimizers import adam, sgd, rmsprop
+from keras.layers import BatchNormalization
 from keras.utils.vis_utils import plot_model
 from hyperopt import Trials, STATUS_OK, tpe
 from hyperas import optim
@@ -49,7 +50,7 @@ def data():
     output_final_ints = np.array(output_final_ints)
 
     train_input, test_input, train_output, test_output = \
-        train_test_split(matches_nn_input, output_final_ints, test_size=0.5, shuffle=False)
+        train_test_split(matches_nn_input, output_final_ints, test_size=0.3, shuffle=False)
 
     # Normalized input
     # max_col_values_train = [max(l) for l in list(zip(*train_input))]
@@ -77,18 +78,20 @@ def create_model(train_input, train_output, test_input, test_output):
     # choices2 = [128, 256, 512, 1024]
 
     model = Sequential()
-    model.add(Dense({{choice([10, 20, 40, 80, 160])}}, input_shape=(train_input.shape[1], )))
+    model.add(Dense({{choice([10, 20, 30, 40])}}, input_shape=(train_input.shape[1], )))
+    model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
+    model.add(BatchNormalization())
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-    model.add(Dense({{choice([10, 20, 40, 80, 160])}}))
-    model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-    model.add(Dense({{choice([10, 20, 40, 80, 160])}}))
+    model.add(Dense({{choice([10, 20, 30, 40])}}))
+    model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
+    model.add(BatchNormalization())
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
     model.add(Dense(len(output_class)))
     model.add(Activation('softmax'))
 
     adam_opt = adam(lr={{choice([10 ** -3, 10 ** -2, 10 ** -1])}})
     sgd_opt = sgd(lr={{choice([10 ** -3, 10 ** -2, 10 ** -1])}})
-    optimizers = {{choice(['sgd', 'adam'])}}
+    optimizers = {{choice(['adam', 'sgd'])}}
 
     if optimizers == 'adam':
         optim = adam_opt
@@ -98,16 +101,18 @@ def create_model(train_input, train_output, test_input, test_output):
     model.compile(optimizer=optim,
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
-    result = model.fit(train_input, train_output, epochs={{choice([8, 9, 10, 11, 12, 13])}})
+    result = model.fit(train_input, train_output, epochs={{choice([1, 2, 3, 4, 5])}}, batch_size=1)
 
     # print("Testing...")
     # test_loss, test_acc = model.evaluate(test_input, test_output)
     # print('Test accuracy:', test_acc)
-
+    #
     # prediction = model.predict(test_input)
-
+    #
     # print(result.history)
+
     validation_acc = np.amax(result.history['acc'])
+    print('Best validation acc of epoch:', validation_acc)
     return {
         'loss': -validation_acc,
         'status': STATUS_OK,
@@ -126,48 +131,73 @@ if __name__ == '__main__':
 
     train_input, train_output, test_input, test_output, matches_nn_input = data()
 
+    ######## Used for testing and exploring, delete later ############
+    # output_class = ['H', 'D', 'A']
+    #
+    # model = Sequential()
+    # model.add(Dense(30, input_shape=(train_input.shape[1],)))
+    # model.add(Dropout(0.6))
+    # model.add(BatchNormalization())
+    # model.add(Activation('relu'))
+    # model.add(Dense(20))
+    # model.add(Dropout(0.2))
+    # model.add(BatchNormalization())
+    # model.add(Activation('relu'))
+    # model.add(Dense(len(output_class)))
+    # model.add(Activation('softmax'))
+    #
+    # adam = adam(lr=0.001)
+    # model.compile(optimizer=adam,
+    #               loss='sparse_categorical_crossentropy',
+    #               metrics=['accuracy'])
+    # result = model.fit(train_input, train_output, epochs=4, batch_size=1)
+    #
+    # print("Testing...")
+    # test_loss, test_acc = model.evaluate(test_input, test_output)
+    # print('Test accuracy:', test_acc)
+    #
+    # prediction = model.predict(test_input)
+
+    ######################################################3
+
     # TODO maybe: plot model only if user wants that
     # plot_model(best_model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
-    print("---")
-    print(best_model.evaluate(test_input, test_output))
+    # print("---")
+    # print(model.evaluate(test_input, test_output))
 
     print("best run:")
     # print("Activation function: ", activation_function_choice[best_run['Activation']])
     print(best_run)
 
-    # prediction = best_model.predict(test_input)
-    #
-    # print(np.count_nonzero(test_output == 0))
-    # print(np.count_nonzero(test_output == 1))
-    # print(np.count_nonzero(test_output == 2))
-    #
-    # ones = 0
-    # zeros = 0
-    # twos = 0
-    # correct_zeros = 0
-    # correct_twos = 0
-    # correct_ones = 0
+    prediction = best_model.predict(test_input)
+
+    ones = 0
+    zeros = 0
+    twos = 0
+    correct_zeros = 0
+    correct_twos = 0
+    correct_ones = 0
     # print("PREDICTION")
     # print(prediction)
     # print("PREDICTION")
-    # for i in range(1347):
-    #     #     print(test_output[i], np.argmax(prediction[i]))
-    #     if np.argmax(prediction[i]) == 0:
-    #         zeros += 1
-    #         if test_output[i] == 0:
-    #             correct_zeros += 1
-    #     elif np.argmax(prediction[i]) == 1:
-    #         if test_output[i] == 1:
-    #             correct_ones += 1
-    #         ones += 1
-    #     else:
-    #         if test_output[i] == 2:
-    #             correct_twos += 1
-    #         twos += 1
-    #
-    # print()
-    # print(ones, zeros, twos)
-    # print()
-    # print(correct_ones, correct_zeros, correct_twos)
+    for i in range(1347):
+        # print(test_output[i], np.argmax(prediction[i]))
+        if np.argmax(prediction[i]) == 0:
+            zeros += 1
+            if test_output[i] == 0:
+                correct_zeros += 1
+        elif np.argmax(prediction[i]) == 1:
+            if test_output[i] == 1:
+                correct_ones += 1
+            ones += 1
+        else:
+            if test_output[i] == 2:
+                correct_twos += 1
+            twos += 1
+
+    print()
+    print(ones, zeros, twos)
+    print()
+    print(correct_ones, correct_zeros, correct_twos)
 
