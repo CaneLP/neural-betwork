@@ -10,6 +10,10 @@ from hyperas.distributions import choice, uniform
 from sklearn.model_selection import train_test_split
 import json
 
+from sklearn.metrics import confusion_matrix
+import itertools
+import matplotlib.pyplot as plt
+
 # Beautify print - delete later
 import sys
 np.set_printoptions(threshold=sys.maxsize)
@@ -72,20 +76,24 @@ def data():
 
 
 def create_model(train_input, train_output, test_input, test_output):
+
     output_class = ['H', 'D', 'A']
 
-    # choices = [10, 20, 40, 80, 160]
-    # choices2 = [128, 256, 512, 1024]
-
     model = Sequential()
+
+    # Input layer and first hidden layer
     model.add(Dense({{choice([10, 20, 30, 40])}}, input_shape=(train_input.shape[1], )))
-    model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
     model.add(BatchNormalization())
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
+    model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
+
+    # Second hidden layer
     model.add(Dense({{choice([10, 20, 30, 40])}}))
-    model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
     model.add(BatchNormalization())
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
+    model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
+
+    # Output layer
     model.add(Dense(len(output_class)))
     model.add(Activation('softmax'))
 
@@ -118,6 +126,48 @@ def create_model(train_input, train_output, test_input, test_output):
         'status': STATUS_OK,
         'model': model
     }
+
+
+def plot_confusion_matrix(cm,
+                          target_names,
+                          title='Confusion matrix',
+                          cmap=None,
+                          normalize=False):
+
+    accuracy = np.trace(cm) / float(np.sum(cm))
+    misclass = 1 - accuracy
+
+    if cmap is None:
+        cmap = plt.get_cmap('Blues')
+
+    plt.figure(figsize=(8, 6))
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+
+    if target_names is not None:
+        tick_marks = np.arange(len(target_names))
+        plt.xticks(tick_marks, target_names, rotation=45)
+        plt.yticks(tick_marks, target_names)
+
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+    thresh = cm.max() / 1.5 if normalize else cm.max() / 2
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        if normalize:
+            plt.text(j, i, "{:0.4f}".format(cm[i, j]),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+        else:
+            plt.text(j, i, "{:,}".format(cm[i, j]),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label\naccuracy={:0.4f}; misclass={:0.4f}'.format(accuracy, misclass))
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -158,7 +208,7 @@ if __name__ == '__main__':
     #
     # prediction = model.predict(test_input)
 
-    ######################################################3
+    ######################################################
 
     # TODO maybe: plot model only if user wants that
     # plot_model(best_model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
@@ -181,7 +231,7 @@ if __name__ == '__main__':
     # print("PREDICTION")
     # print(prediction)
     # print("PREDICTION")
-    for i in range(1347):
+    for i in range(len(prediction)):
         # print(test_output[i], np.argmax(prediction[i]))
         if np.argmax(prediction[i]) == 0:
             zeros += 1
@@ -200,4 +250,14 @@ if __name__ == '__main__':
     print(ones, zeros, twos)
     print()
     print(correct_ones, correct_zeros, correct_twos)
+
+    # Confusion matrix
+    pred_classes = best_model.predict_classes(test_input)
+    # print("Predicted classes:")
+    # print(np.count_nonzero(pred_classes == 1), np.count_nonzero(pred_classes == 0), np.count_nonzero(pred_classes == 2))
+
+    cm = confusion_matrix(test_output, pred_classes)
+    cm_plot_labels = ["Draw", "Home", "Away"]
+    plot_confusion_matrix(cm, cm_plot_labels, title="Confusion matrix")
+
 
