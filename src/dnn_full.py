@@ -44,17 +44,60 @@ def data():
             match_nn_input.append(value[0]['away_team_shots_on_target'])
             match_nn_input.append(value[0]['away_team_shots_opposition'])
             match_nn_input.append(value[0]['away_team_shots_opposition_on_target'])
-            # match_nn_input.append(value[0]['home_team_bet'])
-            # match_nn_input.append(value[0]['draw_bet'])
-            # match_nn_input.append(value[0]['away_team_bet'])
+            match_nn_input.append(value[0]['home_team_bet'])
+            match_nn_input.append(value[0]['draw_bet'])
+            match_nn_input.append(value[0]['away_team_bet'])
             matches_nn_input.append(match_nn_input)
             output_final_ints.append(value[0]['result'])
 
-    matches_nn_input = np.array(matches_nn_input)
+    matches_stats = np.array(matches_nn_input)
     output_final_ints = np.array(output_final_ints)
 
+    htw = 0
+    htd = 1
+    htl = 2
+    htgs = 3
+    htgc = 4
+    hts = 5
+    htsot = 6
+    htso = 7
+    htsoot = 8
+    atw = 9
+    atd = 10
+    atl = 11
+    atgs = 12
+    atgc = 13
+    ats = 14
+    atsot = 15
+    atso = 16
+    atsoot = 17
+    htb = 18
+    db = 19
+    atb = 20
+
+    coefficient_win_rate = 10
+    coefficient_goals = 0
+    coefficient_shots = 0
+    coefficient_bet = 0
+
+    nn_input = []
+    for stats in matches_stats:
+        calculate_input_ht = coefficient_win_rate * (stats[htw] + stats[htd] / 2.0 - stats[htl]) + \
+                             coefficient_goals * (stats[htgs] / (stats[htgs] + stats[htgc]) + 1) + \
+                             coefficient_shots * (stats[hts] / stats[htsot] - stats[htso] / stats[htsoot]) + \
+                             coefficient_bet * ((stats[htb] + stats[db] / 2.0) / (stats[htb] + stats[db] + stats[atb]))
+
+        calculate_input_at = coefficient_win_rate * (stats[atw] + stats[atd] / 2.0 - stats[atl]) + \
+                             coefficient_goals * (stats[atgs] / (stats[atgs] + stats[atgc]) + 1) + \
+                             coefficient_shots * (stats[ats] / stats[atsot] - stats[atso] / stats[atsoot]) + \
+                             coefficient_bet * ((stats[atb] + stats[db] / 2.0) / (stats[htb] + stats[db] + stats[atb]))
+
+        nn_input.append([calculate_input_ht, calculate_input_at])
+
+    nn_input = np.array(nn_input)
+
     train_input, test_input, train_output, test_output = \
-        train_test_split(matches_nn_input, output_final_ints, test_size=0.3, shuffle=False)
+        train_test_split(nn_input, output_final_ints, test_size=0.1, shuffle=False)
 
     # Normalized input
     # max_col_values_train = [max(l) for l in list(zip(*train_input))]
@@ -83,13 +126,13 @@ def create_model(train_input, train_output, test_input, test_output):
 
     # Input layer and first hidden layer
     model.add(Dense({{choice([10, 20, 30, 40])}}, input_shape=(train_input.shape[1], )))
-    model.add(BatchNormalization())
+    # model.add(BatchNormalization())
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
     model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
 
     # Second hidden layer
     model.add(Dense({{choice([10, 20, 30, 40])}}))
-    model.add(BatchNormalization())
+    # model.add(BatchNormalization())
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
     model.add(Dropout({{choice([0.1, 0.2, 0.3, 0.4, 0.5, 0.6])}}))
 
