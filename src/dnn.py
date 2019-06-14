@@ -70,7 +70,7 @@ def create_model(train_input, train_output, test_input, test_output):
 
     adam_opt = adam(lr={{choice([10 ** -3, 10 ** -2, 10 ** -1])}})
     sgd_opt = sgd(lr={{choice([10 ** -3, 10 ** -2, 10 ** -1])}})
-    optimizers = {{choice(['relu', 'sigmoid'])}}
+    optimizers = {{choice(['adam', 'sgd'])}}
 
     if optimizers == 'adam':
         optim = adam_opt
@@ -80,7 +80,7 @@ def create_model(train_input, train_output, test_input, test_output):
     model.compile(optimizer=optim,
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
-    result = model.fit(train_input, train_output, epochs={{choice([8, 9, 10, 11, 12, 13])}})
+    result = model.fit(train_input, train_output, batch_size=1, epochs={{choice([1, 2, 3, 4])}})
 
     # print("Testing...")
     # test_loss, test_acc = model.evaluate(test_input, test_output)
