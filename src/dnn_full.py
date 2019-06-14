@@ -8,6 +8,7 @@ from hyperopt import Trials, STATUS_OK, tpe
 from hyperas import optim
 from hyperas.distributions import choice, uniform
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 import json
 
 from sklearn.metrics import confusion_matrix
@@ -53,6 +54,22 @@ def data():
     matches_stats = np.array(matches_nn_input)
     output_final_ints = np.array(output_final_ints)
 
+    teams_strengths = {}
+    with open('processed_teams_stats.json') as json_file:
+        json_data = json.load(json_file)
+        for (key, value) in json_data.items():
+            home_strength = ((value[0]['home_wins'] + value[0]['home_draws'] / 2.0 - value[0]['home_losses']) /
+                             value[0]['num_matches']) + \
+                            ((value[0]['home_goals_scored'] - (value[0]['home_goals_conceded'])) /
+                             value[0]['num_matches'])
+            away_strength = ((value[0]['away_wins'] + value[0]['away_draws'] / 2.0 - value[0]['away_losses']) /
+                             value[0]['num_matches']) + \
+                            ((value[0]['away_goals_scored'] - (value[0]['away_goals_conceded'])) /
+                             value[0]['num_matches'])
+            teams_strengths[key] = [home_strength, away_strength]
+
+    print(teams_strengths)
+
     htw = 0
     htd = 1
     htl = 2
@@ -62,42 +79,52 @@ def data():
     htsot = 6
     htso = 7
     htsoot = 8
-    atw = 9
-    atd = 10
-    atl = 11
-    atgs = 12
-    atgc = 13
-    ats = 14
-    atsot = 15
-    atso = 16
-    atsoot = 17
-    htb = 18
-    db = 19
-    atb = 20
+    ht = 9
+    atw = 10
+    atd = 11
+    atl = 12
+    atgs = 13
+    atgc = 14
+    ats = 15
+    atsot = 16
+    atso = 17
+    atsoot = 18
+    at = 19
+    htb = 20
+    db = 21
+    atb = 22
 
     coefficient_win_rate = 10
-    coefficient_goals = 0
+    coefficient_goals = 5
     coefficient_shots = 0
     coefficient_bet = 0
 
     nn_input = []
     for stats in matches_stats:
-        calculate_input_ht = coefficient_win_rate * (stats[htw] + stats[htd] / 2.0 - stats[htl]) + \
-                             coefficient_goals * (stats[htgs] / (stats[htgs] + stats[htgc]) + 1) + \
-                             coefficient_shots * (stats[hts] / stats[htsot] - stats[htso] / stats[htsoot]) + \
-                             coefficient_bet * ((stats[htb] + stats[db] / 2.0) / (stats[htb] + stats[db] + stats[atb]))
+        calculate_input_ht = teams_strengths[stats[ht]] * \
+                             (coefficient_win_rate * (stats[htw] + stats[htd] / 2.0 - stats[htl]) +
+                              coefficient_goals * (stats[htgs] / (stats[htgs] + stats[htgc]) + 1) +
+                              coefficient_shots * (stats[hts] / stats[htsot] - stats[htso] / stats[htsoot]) +
+                              coefficient_bet * ((stats[htb] + stats[db] / 2.0) /
+                                                 (stats[htb] + stats[db] + stats[atb])))
 
-        calculate_input_at = coefficient_win_rate * (stats[atw] + stats[atd] / 2.0 - stats[atl]) + \
-                             coefficient_goals * (stats[atgs] / (stats[atgs] + stats[atgc]) + 1) + \
-                             coefficient_shots * (stats[ats] / stats[atsot] - stats[atso] / stats[atsoot]) + \
-                             coefficient_bet * ((stats[atb] + stats[db] / 2.0) / (stats[htb] + stats[db] + stats[atb]))
+        calculate_input_at = teams_strengths[stats[at]] * \
+                             (coefficient_win_rate * (stats[atw] + stats[atd] / 2.0 - stats[atl]) +
+                              coefficient_goals * (stats[atgs] / (stats[atgs] + stats[atgc]) + 1) +
+                              coefficient_shots * (stats[ats] / stats[atsot] - stats[atso] / stats[atsoot]) +
+                              coefficient_bet * ((stats[atb] + stats[db] / 2.0) /
+                                                 (stats[htb] + stats[db] + stats[atb])))
 
         nn_input.append([calculate_input_ht, calculate_input_at])
 
+    print(nn_input)
+
     nn_input = np.array(nn_input)
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    nn_input = scaler.fit_transform(nn_input)
 
     train_input, test_input, train_output, test_output = \
-        train_test_split(nn_input, output_final_ints, test_size=0.1, shuffle=False)
+        train_test_split(nn_input, output_final_ints, test_size=0.3, shuffle=False)
 
     # Normalized input
     # max_col_values_train = [max(l) for l in list(zip(*train_input))]

@@ -32,7 +32,7 @@ def process_data():
     for i in range(len(matches)):
         match_index = len(matches) - i - 1
         curr_match = matches.iloc[len(matches) - i - 1]
-        match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0] * 10, [0] * 10,
+        match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0] * 11, [0] * 11,
                               [curr_match['WHH'], curr_match['WHD'], curr_match['WHA']]
                               ]
 
@@ -157,7 +157,8 @@ def process_data():
                 home_or_away = 1
             match[match_key][home_or_away] = [games_total, wins_total, draws_total,
                                               losses_total, goals_scored_total, goals_conceded_total,
-                                              shots_total, shots_on_target_total, shots_op, shots_on_target_op]
+                                              shots_total, shots_on_target_total, shots_op, shots_on_target_op,
+                                              curr_team]
 
         if len(team[curr_match['AwayTeam']]) > last_n_games:
             curr_team = copy.deepcopy(curr_match['AwayTeam'])
@@ -215,7 +216,8 @@ def process_data():
                 home_or_away = 1
             match[match_key][home_or_away] = [games_total, wins_total, draws_total,
                                               losses_total, goals_scored_total, goals_conceded_total,
-                                              shots_total, shots_on_target_total, shots_op, shots_on_target_op]
+                                              shots_total, shots_on_target_total, shots_op, shots_on_target_op,
+                                              curr_team]
 
     # for key, value in match.items():
     #         print(key, value)
@@ -252,27 +254,29 @@ def process_data():
     for i in range(matches_nn_input.shape[0]):
         json_data[i] = []
         json_data[i].append({
-            'home_team_wins': int(matches_nn_input[i][0]),
-            'home_team_draws': int(matches_nn_input[i][1]),
-            'home_team_losses': int(matches_nn_input[i][2]),
-            'home_team_goals_scored': int(matches_nn_input[i][3]),
-            'home_team_goals_conceded': int(matches_nn_input[i][4]),
-            'home_team_shots': int(matches_nn_input[i][5]),
-            'home_team_shots_on_target': int(matches_nn_input[i][6]),
-            'home_team_shots_opposition': int(matches_nn_input[i][7]),
-            'home_team_shots_opposition_on_target': int(matches_nn_input[i][8]),
-            'away_team_wins': int(matches_nn_input[i][9]),
-            'away_team_draws': int(matches_nn_input[i][10]),
-            'away_team_losses': int(matches_nn_input[i][11]),
-            'away_team_goals_scored': int(matches_nn_input[i][12]),
-            'away_team_goals_conceded': int(matches_nn_input[i][13]),
-            'away_team_shots': int(matches_nn_input[i][14]),
-            'away_team_shots_on_target': int(matches_nn_input[i][15]),
-            'away_team_shots_opposition': int(matches_nn_input[i][16]),
-            'away_team_shots_opposition_on_target': int(matches_nn_input[i][17]),
-            'home_team_bet': float(matches_nn_input[i][18]),
-            'draw_bet': float(matches_nn_input[i][19]),
-            'away_team_bet': float(matches_nn_input[i][20]),
+            'home_team': matches_nn_input[i][9],
+            'home_team_wins': float(matches_nn_input[i][0]),
+            'home_team_draws': float(matches_nn_input[i][1]),
+            'home_team_losses': float(matches_nn_input[i][2]),
+            'home_team_goals_scored': float(matches_nn_input[i][3]),
+            'home_team_goals_conceded': float(matches_nn_input[i][4]),
+            'home_team_shots': float(matches_nn_input[i][5]),
+            'home_team_shots_on_target': float(matches_nn_input[i][6]),
+            'home_team_shots_opposition': float(matches_nn_input[i][7]),
+            'home_team_shots_opposition_on_target': float(matches_nn_input[i][8]),
+            'away_team': matches_nn_input[i][19],
+            'away_team_wins': float(matches_nn_input[i][10]),
+            'away_team_draws': float(matches_nn_input[i][11]),
+            'away_team_losses': float(matches_nn_input[i][12]),
+            'away_team_goals_scored': float(matches_nn_input[i][13]),
+            'away_team_goals_conceded': float(matches_nn_input[i][14]),
+            'away_team_shots': float(matches_nn_input[i][15]),
+            'away_team_shots_on_target': float(matches_nn_input[i][16]),
+            'away_team_shots_opposition': float(matches_nn_input[i][17]),
+            'away_team_shots_opposition_on_target': float(matches_nn_input[i][18]),
+            'home_team_bet': float(matches_nn_input[i][20]),
+            'draw_bet': float(matches_nn_input[i][21]),
+            'away_team_bet': float(matches_nn_input[i][22]),
             'result': int(output_final_ints[i])
         })
 
