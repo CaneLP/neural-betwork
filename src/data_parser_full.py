@@ -32,7 +32,7 @@ def process_data():
         match_index = len(matches) - i - 1
         curr_match = matches.iloc[len(matches) - i - 1]
         match[match_index] = [(curr_match['HomeTeam'], curr_match['AwayTeam']), [0] * 10, [0] * 10,
-                              # [curr_match['WHH'], curr_match['WHD'], curr_match['WHA']]
+                              [curr_match['WHH'], curr_match['WHD'], curr_match['WHA']]
                               ]
 
         if curr_match['HomeTeam'] in team:
@@ -173,8 +173,8 @@ def process_data():
             # print(key, value)
             rows_to_drop.append(key)
         else:
-            matches_nn_input.append(match[key][1][1:] + match[key][2][1:])
-            # matches_nn_input.append(match[key][3])
+            # matches_nn_input.append(match[key][1][1:] + match[key][2][1:])
+            matches_nn_input.append(match[key][1][1:] + match[key][2][1:] + match[key][3])
 
     matches = matches.drop(rows_to_drop)
     matches.index = range(len(matches))
@@ -213,9 +213,9 @@ def process_data():
             'away_team_shots_on_target': int(matches_nn_input[i][15]),
             'away_team_shots_opposition': int(matches_nn_input[i][16]),
             'away_team_shots_opposition_on_target': int(matches_nn_input[i][17]),
-            # 'home_team_bet': float(matches_nn_input[i][18]),
-            # 'draw_bet': float(matches_nn_input[i][19]),
-            # 'away_team_bet': float(matches_nn_input[i][20]),
+            'home_team_bet': float(matches_nn_input[i][18]),
+            'draw_bet': float(matches_nn_input[i][19]),
+            'away_team_bet': float(matches_nn_input[i][20]),
             'result': int(output_final_ints[i])
         })
 
