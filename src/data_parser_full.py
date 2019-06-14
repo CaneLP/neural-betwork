@@ -28,6 +28,7 @@ def process_data():
     # Collecting data
     match = {}
     team = {}
+    team_stats = {}
     for i in range(len(matches)):
         match_index = len(matches) - i - 1
         curr_match = matches.iloc[len(matches) - i - 1]
@@ -44,6 +45,62 @@ def process_data():
             team[curr_match['AwayTeam']] = team[curr_match['AwayTeam']] + [match_index]
         else:
             team[curr_match['AwayTeam']] = [match_index]
+
+        if curr_match['HomeTeam'] in team_stats:
+            win = 0
+            draw = 0
+            loss = 0
+            num_matches = 1
+            if curr_match['FTR'] == 'H':
+                win = 1
+            elif curr_match['FTR'] == 'D':
+                draw = 1
+            else:
+                loss = 1
+            goals_scored = curr_match['FTHG']
+            goals_conceded = curr_match['FTAG']
+            team_stats[curr_match['HomeTeam']][0] = [sum(x) for x in zip(team_stats[curr_match['HomeTeam']][0],
+                                                                         [win, draw, loss, goals_scored, goals_conceded,
+                                                                          num_matches])]
+        else:
+            win = 0
+            draw = 0
+            loss = 0
+            if curr_match['FTR'] == 'H':
+                win = 1
+            elif curr_match['FTR'] == 'D':
+                draw = 1
+            else:
+                loss = 1
+            team_stats[curr_match['HomeTeam']] = [[win, draw, loss, curr_match['FTHG'], curr_match['FTAG'], 1], [0] * 6]
+
+        if curr_match['AwayTeam'] in team_stats:
+            win = 0
+            draw = 0
+            loss = 0
+            num_matches = 1
+            if curr_match['FTR'] == 'A':
+                win = 1
+            elif curr_match['FTR'] == 'D':
+                draw = 1
+            else:
+                loss = 1
+            goals_scored = curr_match['FTAG']
+            goals_conceded = curr_match['FTHG']
+            team_stats[curr_match['AwayTeam']][1] = [sum(x) for x in zip(team_stats[curr_match['AwayTeam']][1],
+                                                                         [win, draw, loss, goals_scored, goals_conceded,
+                                                                          num_matches])]
+        else:
+            win = 0
+            draw = 0
+            loss = 0
+            if curr_match['FTR'] == 'A':
+                win = 1
+            elif curr_match['FTR'] == 'D':
+                draw = 1
+            else:
+                loss = 1
+            team_stats[curr_match['AwayTeam']] = [[0] * 6, [win, draw, loss, curr_match['FTAG'], curr_match['FTHG'], 1]]
 
         if len(team[curr_match['HomeTeam']]) > last_n_games:
             curr_team = copy.deepcopy(curr_match['HomeTeam'])
@@ -220,6 +277,26 @@ def process_data():
         })
 
     with open('processed_data_full.json', 'w') as outfile:
+        json.dump(json_data, outfile, indent=4)
+
+    json_data = {}
+    for key, value in team_stats.items():
+        json_data[key] = []
+        json_data[key].append({
+            'home_wins': int(value[0][0]),
+            'home_draws': int(value[0][1]),
+            'home_losses': int(value[0][2]),
+            'home_goals_scored': int(value[0][3]),
+            'home_goals_conceded': int(value[0][4]),
+            'away_wins': int(value[1][0]),
+            'away_draws': int(value[1][1]),
+            'away_losses': int(value[1][2]),
+            'away_goals_scored': int(value[1][3]),
+            'away_goals_conceded': int(value[1][4]),
+            'num_matches': int(value[0][5] + value[1][5])
+        })
+
+    with open('processed_teams_stats.json', 'w') as outfile:
         json.dump(json_data, outfile, indent=4)
 
 
