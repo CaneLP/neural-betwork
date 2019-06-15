@@ -36,6 +36,7 @@ def data():
             match_nn_input.append(value[0]['home_team_shots_on_target'])
             match_nn_input.append(value[0]['home_team_shots_opposition'])
             match_nn_input.append(value[0]['home_team_shots_opposition_on_target'])
+            match_nn_input.append(value[0]['home_team'])
             match_nn_input.append(value[0]['away_team_wins'])
             match_nn_input.append(value[0]['away_team_draws'])
             match_nn_input.append(value[0]['away_team_losses'])
@@ -45,6 +46,7 @@ def data():
             match_nn_input.append(value[0]['away_team_shots_on_target'])
             match_nn_input.append(value[0]['away_team_shots_opposition'])
             match_nn_input.append(value[0]['away_team_shots_opposition_on_target'])
+            match_nn_input.append(value[0]['away_team'])
             match_nn_input.append(value[0]['home_team_bet'])
             match_nn_input.append(value[0]['draw_bet'])
             match_nn_input.append(value[0]['away_team_bet'])
@@ -68,7 +70,7 @@ def data():
                              value[0]['num_matches'])
             teams_strengths[key] = [home_strength, away_strength]
 
-    print(teams_strengths)
+    # print(teams_strengths)
 
     htw = 0
     htd = 1
@@ -101,19 +103,24 @@ def data():
 
     nn_input = []
     for stats in matches_stats:
-        calculate_input_ht = teams_strengths[stats[ht]] * \
-                             (coefficient_win_rate * (stats[htw] + stats[htd] / 2.0 - stats[htl]) +
-                              coefficient_goals * (stats[htgs] / (stats[htgs] + stats[htgc]) + 1) +
-                              coefficient_shots * (stats[hts] / stats[htsot] - stats[htso] / stats[htsoot]) +
-                              coefficient_bet * ((stats[htb] + stats[db] / 2.0) /
-                                                 (stats[htb] + stats[db] + stats[atb])))
+        # print(teams_strengths[stats[ht]])
+        calculate_input_ht = teams_strengths[stats[ht]][0] * \
+                             (coefficient_win_rate * (float(stats[htw]) + float(stats[htd]) / 2.0 -
+                                                      float(stats[htl])) +
+                              coefficient_goals * (float(stats[htgs]) / (float(stats[htgs]) + float(stats[htgc]) + 1)) +
+                              coefficient_shots * (float(stats[hts]) / float(stats[htsot]) -
+                                                   float(stats[htso]) / float(stats[htsoot])) +
+                              coefficient_bet * ((float(stats[htb]) + float(stats[db]) / 2.0) /
+                                                 (float(stats[htb]) + float(stats[db]) + float(stats[atb]))))
 
-        calculate_input_at = teams_strengths[stats[at]] * \
-                             (coefficient_win_rate * (stats[atw] + stats[atd] / 2.0 - stats[atl]) +
-                              coefficient_goals * (stats[atgs] / (stats[atgs] + stats[atgc]) + 1) +
-                              coefficient_shots * (stats[ats] / stats[atsot] - stats[atso] / stats[atsoot]) +
-                              coefficient_bet * ((stats[atb] + stats[db] / 2.0) /
-                                                 (stats[htb] + stats[db] + stats[atb])))
+        calculate_input_at = teams_strengths[stats[at]][1] *\
+                             (coefficient_win_rate * (float(stats[atw]) + float(stats[atd]) / 2.0 -
+                                                             float(stats[atl])) +
+                              coefficient_goals * (float(stats[atgs]) / (float(stats[atgs]) + float(stats[atgc]) + 1)) +
+                              coefficient_shots * (float(stats[ats]) / float(stats[atsot]) -
+                                                   float(stats[atso]) / float(stats[atsoot])) +
+                              coefficient_bet * ((float(stats[atb]) + float(stats[db]) / 2.0) /
+                                                 (float(stats[htb]) + float(stats[db]) + float(stats[atb]))))
 
         nn_input.append([calculate_input_ht, calculate_input_at])
 
