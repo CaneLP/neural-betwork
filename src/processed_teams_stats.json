@@ -1,0 +1,662 @@
+{
+    "Wolves": [
+        {
+            "home_wins": 31,
+            "home_draws": 21,
+            "home_losses": 40,
+            "home_goals_scored": 109,
+            "home_goals_conceded": 150,
+            "away_wins": 14,
+            "away_draws": 27,
+            "away_losses": 51,
+            "away_goals_scored": 87,
+            "away_goals_conceded": 170,
+            "num_matches": 184
+        }
+    ],
+    "Blackburn": [
+        {
+            "home_wins": 83,
+            "home_draws": 58,
+            "home_losses": 63,
+            "home_goals_scored": 281,
+            "home_goals_conceded": 234,
+            "away_wins": 51,
+            "away_draws": 48,
+            "away_losses": 104,
+            "away_goals_scored": 219,
+            "away_goals_conceded": 346,
+            "num_matches": 407
+        }
+    ],
+    "West Ham": [
+        {
+            "home_wins": 122,
+            "home_draws": 73,
+            "home_losses": 101,
+            "home_goals_scored": 413,
+            "home_goals_conceded": 382,
+            "away_wins": 64,
+            "away_draws": 80,
+            "away_losses": 151,
+            "away_goals_scored": 300,
+            "away_goals_conceded": 499,
+            "num_matches": 591
+        }
+    ],
+    "Sunderland": [
+        {
+            "home_wins": 79,
+            "home_draws": 74,
+            "home_losses": 108,
+            "home_goals_scored": 283,
+            "home_goals_conceded": 330,
+            "away_wins": 46,
+            "away_draws": 62,
+            "away_losses": 152,
+            "away_goals_scored": 225,
+            "away_goals_conceded": 445,
+            "num_matches": 521
+        }
+    ],
+    "Tottenham": [
+        {
+            "home_wins": 206,
+            "home_draws": 78,
+            "home_losses": 67,
+            "home_goals_scored": 629,
+            "home_goals_conceded": 353,
+            "away_wins": 127,
+            "away_draws": 84,
+            "away_losses": 142,
+            "away_goals_scored": 469,
+            "away_goals_conceded": 497,
+            "num_matches": 704
+        }
+    ],
+    "Birmingham": [
+        {
+            "home_wins": 48,
+            "home_draws": 45,
+            "home_losses": 35,
+            "home_goals_scored": 156,
+            "home_goals_conceded": 134,
+            "away_wins": 22,
+            "away_draws": 35,
+            "away_losses": 70,
+            "away_goals_scored": 106,
+            "away_goals_conceded": 211,
+            "num_matches": 255
+        }
+    ],
+    "Stoke": [
+        {
+            "home_wins": 81,
+            "home_draws": 54,
+            "home_losses": 55,
+            "home_goals_scored": 248,
+            "home_goals_conceded": 213,
+            "away_wins": 35,
+            "away_draws": 55,
+            "away_losses": 100,
+            "away_goals_scored": 150,
+            "away_goals_conceded": 312,
+            "num_matches": 380
+        }
+    ],
+    "Wigan": [
+        {
+            "home_wins": 46,
+            "home_draws": 44,
+            "home_losses": 57,
+            "home_goals_scored": 164,
+            "home_goals_conceded": 211,
+            "away_wins": 37,
+            "away_draws": 30,
+            "away_losses": 79,
+            "away_goals_scored": 142,
+            "away_goals_conceded": 254,
+            "num_matches": 293
+        }
+    ],
+    "Newcastle": [
+        {
+            "home_wins": 143,
+            "home_draws": 78,
+            "home_losses": 93,
+            "home_goals_scored": 459,
+            "home_goals_conceded": 373,
+            "away_wins": 70,
+            "away_draws": 82,
+            "away_losses": 162,
+            "away_goals_scored": 319,
+            "away_goals_conceded": 525,
+            "num_matches": 628
+        }
+    ],
+    "West Brom": [
+        {
+            "home_wins": 73,
+            "home_draws": 60,
+            "home_losses": 95,
+            "home_goals_scored": 280,
+            "home_goals_conceded": 322,
+            "away_wins": 39,
+            "away_draws": 68,
+            "away_losses": 121,
+            "away_goals_scored": 195,
+            "away_goals_conceded": 374,
+            "num_matches": 456
+        }
+    ],
+    "Man United": [
+        {
+            "home_wins": 253,
+            "home_draws": 56,
+            "home_losses": 41,
+            "home_goals_scored": 748,
+            "home_goals_conceded": 254,
+            "away_wins": 189,
+            "away_draws": 84,
+            "away_losses": 81,
+            "away_goals_scored": 594,
+            "away_goals_conceded": 376,
+            "num_matches": 704
+        }
+    ],
+    "Blackpool": [
+        {
+            "home_wins": 5,
+            "home_draws": 5,
+            "home_losses": 9,
+            "home_goals_scored": 30,
+            "home_goals_conceded": 37,
+            "away_wins": 5,
+            "away_draws": 4,
+            "away_losses": 10,
+            "away_goals_scored": 25,
+            "away_goals_conceded": 41,
+            "num_matches": 38
+        }
+    ],
+    "Fulham": [
+        {
+            "home_wins": 115,
+            "home_draws": 56,
+            "home_losses": 86,
+            "home_goals_scored": 359,
+            "home_goals_conceded": 320,
+            "away_wins": 37,
+            "away_draws": 79,
+            "away_losses": 142,
+            "away_goals_scored": 226,
+            "away_goals_conceded": 436,
+            "num_matches": 515
+        }
+    ],
+    "Arsenal": [
+        {
+            "home_wins": 244,
+            "home_draws": 72,
+            "home_losses": 36,
+            "home_goals_scored": 775,
+            "home_goals_conceded": 294,
+            "away_wins": 162,
+            "away_draws": 93,
+            "away_losses": 98,
+            "away_goals_scored": 581,
+            "away_goals_conceded": 426,
+            "num_matches": 705
+        }
+    ],
+    "Everton": [
+        {
+            "home_wins": 180,
+            "home_draws": 90,
+            "home_losses": 83,
+            "home_goals_scored": 568,
+            "home_goals_conceded": 377,
+            "away_wins": 93,
+            "away_draws": 111,
+            "away_losses": 148,
+            "away_goals_scored": 376,
+            "away_goals_conceded": 492,
+            "num_matches": 705
+        }
+    ],
+    "Chelsea": [
+        {
+            "home_wins": 241,
+            "home_draws": 77,
+            "home_losses": 36,
+            "home_goals_scored": 759,
+            "home_goals_conceded": 278,
+            "away_wins": 184,
+            "away_draws": 79,
+            "away_losses": 89,
+            "away_goals_scored": 554,
+            "away_goals_conceded": 343,
+            "num_matches": 706
+        }
+    ],
+    "Bolton": [
+        {
+            "home_wins": 80,
+            "home_draws": 61,
+            "home_losses": 62,
+            "home_goals_scored": 271,
+            "home_goals_conceded": 252,
+            "away_wins": 51,
+            "away_draws": 46,
+            "away_losses": 107,
+            "away_goals_scored": 214,
+            "away_goals_conceded": 344,
+            "num_matches": 407
+        }
+    ],
+    "Man City": [
+        {
+            "home_wins": 201,
+            "home_draws": 59,
+            "home_losses": 74,
+            "home_goals_scored": 675,
+            "home_goals_conceded": 317,
+            "away_wins": 132,
+            "away_draws": 82,
+            "away_losses": 119,
+            "away_goals_scored": 492,
+            "away_goals_conceded": 421,
+            "num_matches": 667
+        }
+    ],
+    "Aston Villa": [
+        {
+            "home_wins": 108,
+            "home_draws": 96,
+            "home_losses": 94,
+            "home_goals_scored": 368,
+            "home_goals_conceded": 334,
+            "away_wins": 75,
+            "away_draws": 90,
+            "away_losses": 134,
+            "away_goals_scored": 336,
+            "away_goals_conceded": 492,
+            "num_matches": 597
+        }
+    ],
+    "Liverpool": [
+        {
+            "home_wins": 220,
+            "home_draws": 91,
+            "home_losses": 42,
+            "home_goals_scored": 697,
+            "home_goals_conceded": 270,
+            "away_wins": 154,
+            "away_draws": 83,
+            "away_losses": 117,
+            "away_goals_scored": 541,
+            "away_goals_conceded": 429,
+            "num_matches": 707
+        }
+    ],
+    "Swansea": [
+        {
+            "home_wins": 51,
+            "home_draws": 37,
+            "home_losses": 45,
+            "home_goals_scored": 179,
+            "home_goals_conceded": 170,
+            "away_wins": 31,
+            "away_draws": 29,
+            "away_losses": 73,
+            "away_goals_scored": 127,
+            "away_goals_conceded": 213,
+            "num_matches": 266
+        }
+    ],
+    "Norwich": [
+        {
+            "home_wins": 34,
+            "home_draws": 29,
+            "home_losses": 32,
+            "home_goals_scored": 125,
+            "home_goals_conceded": 130,
+            "away_wins": 12,
+            "away_draws": 24,
+            "away_losses": 59,
+            "away_goals_scored": 77,
+            "away_goals_conceded": 200,
+            "num_matches": 190
+        }
+    ],
+    "QPR": [
+        {
+            "home_wins": 15,
+            "home_draws": 18,
+            "home_losses": 24,
+            "home_goals_scored": 60,
+            "home_goals_conceded": 77,
+            "away_wins": 7,
+            "away_draws": 8,
+            "away_losses": 42,
+            "away_goals_scored": 55,
+            "away_goals_conceded": 122,
+            "num_matches": 114
+        }
+    ],
+    "Portsmouth": [
+        {
+            "home_wins": 52,
+            "home_draws": 31,
+            "home_losses": 45,
+            "home_goals_scored": 173,
+            "home_goals_conceded": 153,
+            "away_wins": 22,
+            "away_draws": 30,
+            "away_losses": 75,
+            "away_goals_scored": 100,
+            "away_goals_conceded": 215,
+            "num_matches": 255
+        }
+    ],
+    "Middlesbrough": [
+        {
+            "home_wins": 60,
+            "home_draws": 48,
+            "home_losses": 58,
+            "home_goals_scored": 208,
+            "home_goals_conceded": 203,
+            "away_wins": 32,
+            "away_draws": 51,
+            "away_losses": 81,
+            "away_goals_scored": 146,
+            "away_goals_conceded": 232,
+            "num_matches": 330
+        }
+    ],
+    "Derby": [
+        {
+            "home_wins": 13,
+            "home_draws": 14,
+            "home_losses": 25,
+            "home_goals_scored": 50,
+            "home_goals_conceded": 86,
+            "away_wins": 5,
+            "away_draws": 9,
+            "away_losses": 37,
+            "away_goals_scored": 35,
+            "away_goals_conceded": 101,
+            "num_matches": 103
+        }
+    ],
+    "Reading": [
+        {
+            "home_wins": 19,
+            "home_draws": 12,
+            "home_losses": 20,
+            "home_goals_scored": 64,
+            "home_goals_conceded": 71,
+            "away_wins": 9,
+            "away_draws": 10,
+            "away_losses": 33,
+            "away_goals_scored": 58,
+            "away_goals_conceded": 92,
+            "num_matches": 103
+        }
+    ],
+    "Watford": [
+        {
+            "home_wins": 32,
+            "home_draws": 27,
+            "home_losses": 32,
+            "home_goals_scored": 114,
+            "home_goals_conceded": 124,
+            "away_wins": 20,
+            "away_draws": 17,
+            "away_losses": 56,
+            "away_goals_scored": 86,
+            "away_goals_conceded": 164,
+            "num_matches": 184
+        }
+    ],
+    "Sheffield United": [
+        {
+            "home_wins": 7,
+            "home_draws": 6,
+            "home_losses": 6,
+            "home_goals_scored": 24,
+            "home_goals_conceded": 21,
+            "away_wins": 3,
+            "away_draws": 2,
+            "away_losses": 14,
+            "away_goals_scored": 8,
+            "away_goals_conceded": 34,
+            "num_matches": 38
+        }
+    ],
+    "Charlton": [
+        {
+            "home_wins": 54,
+            "home_draws": 33,
+            "home_losses": 46,
+            "home_goals_scored": 179,
+            "home_goals_conceded": 178,
+            "away_wins": 31,
+            "away_draws": 37,
+            "away_losses": 65,
+            "away_goals_scored": 122,
+            "away_goals_conceded": 208,
+            "num_matches": 266
+        }
+    ],
+    "Southampton": [
+        {
+            "home_wins": 90,
+            "home_draws": 69,
+            "home_losses": 66,
+            "home_goals_scored": 320,
+            "home_goals_conceded": 261,
+            "away_wins": 54,
+            "away_draws": 62,
+            "away_losses": 109,
+            "away_goals_scored": 228,
+            "away_goals_conceded": 335,
+            "num_matches": 450
+        }
+    ],
+    "Crystal Palace": [
+        {
+            "home_wins": 43,
+            "home_draws": 25,
+            "home_losses": 62,
+            "home_goals_scored": 145,
+            "home_goals_conceded": 161,
+            "away_wins": 35,
+            "away_draws": 33,
+            "away_losses": 63,
+            "away_goals_scored": 149,
+            "away_goals_conceded": 212,
+            "num_matches": 261
+        }
+    ],
+    "Leicester": [
+        {
+            "home_wins": 59,
+            "home_draws": 44,
+            "home_losses": 46,
+            "home_goals_scored": 202,
+            "home_goals_conceded": 191,
+            "away_wins": 38,
+            "away_draws": 34,
+            "away_losses": 78,
+            "away_goals_scored": 179,
+            "away_goals_conceded": 247,
+            "num_matches": 299
+        }
+    ],
+    "Bournemouth": [
+        {
+            "home_wins": 28,
+            "home_draws": 19,
+            "home_losses": 27,
+            "home_goals_scored": 113,
+            "home_goals_conceded": 117,
+            "away_wins": 17,
+            "away_draws": 16,
+            "away_losses": 40,
+            "away_goals_scored": 76,
+            "away_goals_conceded": 139,
+            "num_matches": 147
+        }
+    ],
+    "Hull": [
+        {
+            "home_wins": 29,
+            "home_draws": 24,
+            "home_losses": 42,
+            "home_goals_scored": 107,
+            "home_goals_conceded": 145,
+            "away_wins": 12,
+            "away_draws": 24,
+            "away_losses": 59,
+            "away_goals_scored": 74,
+            "away_goals_conceded": 178,
+            "num_matches": 190
+        }
+    ],
+    "Burnley": [
+        {
+            "home_wins": 34,
+            "home_draws": 22,
+            "home_losses": 36,
+            "home_goals_scored": 102,
+            "home_goals_conceded": 116,
+            "away_wins": 16,
+            "away_draws": 21,
+            "away_losses": 56,
+            "away_goals_scored": 83,
+            "away_goals_conceded": 173,
+            "num_matches": 185
+        }
+    ],
+    "Leeds": [
+        {
+            "home_wins": 32,
+            "home_draws": 19,
+            "home_losses": 25,
+            "home_goals_scored": 117,
+            "home_goals_conceded": 99,
+            "away_wins": 28,
+            "away_draws": 15,
+            "away_losses": 33,
+            "away_goals_scored": 98,
+            "away_goals_conceded": 117,
+            "num_matches": 152
+        }
+    ],
+    "Ipswich": [
+        {
+            "home_wins": 17,
+            "home_draws": 9,
+            "home_losses": 12,
+            "home_goals_scored": 51,
+            "home_goals_conceded": 39,
+            "away_wins": 12,
+            "away_draws": 6,
+            "away_losses": 20,
+            "away_goals_scored": 47,
+            "away_goals_conceded": 67,
+            "num_matches": 76
+        }
+    ],
+    "Coventry": [
+        {
+            "home_wins": 4,
+            "home_draws": 7,
+            "home_losses": 8,
+            "home_goals_scored": 14,
+            "home_goals_conceded": 23,
+            "away_wins": 4,
+            "away_draws": 3,
+            "away_losses": 12,
+            "away_goals_scored": 22,
+            "away_goals_conceded": 40,
+            "num_matches": 38
+        }
+    ],
+    "Bradford": [
+        {
+            "home_wins": 4,
+            "home_draws": 7,
+            "home_losses": 8,
+            "home_goals_scored": 20,
+            "home_goals_conceded": 29,
+            "away_wins": 1,
+            "away_draws": 4,
+            "away_losses": 14,
+            "away_goals_scored": 10,
+            "away_goals_conceded": 41,
+            "num_matches": 38
+        }
+    ],
+    "Middlesboro": [
+        {
+            "home_wins": 10,
+            "home_draws": 7,
+            "home_losses": 2,
+            "home_goals_scored": 36,
+            "home_goals_conceded": 21,
+            "away_wins": 3,
+            "away_draws": 3,
+            "away_losses": 12,
+            "away_goals_scored": 12,
+            "away_goals_conceded": 22,
+            "num_matches": 37
+        }
+    ],
+    "Huddersfield": [
+        {
+            "home_wins": 8,
+            "home_draws": 7,
+            "home_losses": 21,
+            "home_goals_scored": 24,
+            "home_goals_conceded": 53,
+            "away_wins": 4,
+            "away_draws": 8,
+            "away_losses": 23,
+            "away_goals_scored": 23,
+            "away_goals_conceded": 68,
+            "num_matches": 71
+        }
+    ],
+    "Cardiff": [
+        {
+            "home_wins": 11,
+            "home_draws": 7,
+            "home_losses": 18,
+            "home_goals_scored": 39,
+            "home_goals_conceded": 68,
+            "away_wins": 4,
+            "away_draws": 6,
+            "away_losses": 24,
+            "away_goals_scored": 21,
+            "away_goals_conceded": 67,
+            "num_matches": 70
+        }
+    ],
+    "Brighton": [
+        {
+            "home_wins": 13,
+            "home_draws": 12,
+            "home_losses": 9,
+            "home_goals_scored": 41,
+            "home_goals_conceded": 41,
+            "away_wins": 5,
+            "away_draws": 7,
+            "away_losses": 23,
+            "away_goals_scored": 25,
+            "away_goals_conceded": 59,
+            "num_matches": 69
+        }
+    ]
+}
