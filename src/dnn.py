@@ -172,11 +172,7 @@ def create_model(train_input, train_output, test_input, test_output):
     }
 
 
-def plot_confusion_matrix(cm,
-                          target_names,
-                          title='Confusion matrix',
-                          cmap=None,
-                          normalize=False):
+def plot_confusion_matrix(cm, target_names, title='Confusion matrix', cmap=None, normalize=False):
 
     accuracy = np.trace(cm) / float(np.sum(cm))
     misclass = 1 - accuracy
@@ -232,26 +228,6 @@ if __name__ == '__main__':
     print(best_run)
 
     prediction = best_model.predict(test_input)
-
-    ones = 0
-    zeros = 0
-    twos = 0
-    correct_zeros = 0
-    correct_twos = 0
-    correct_ones = 0
-    for i in range(len(prediction)):
-        if np.argmax(prediction[i]) == 0:
-            zeros += 1
-            if test_output[i] == 0:
-                correct_zeros += 1
-        elif np.argmax(prediction[i]) == 1:
-            if test_output[i] == 1:
-                correct_ones += 1
-            ones += 1
-        else:
-            if test_output[i] == 2:
-                correct_twos += 1
-            twos += 1
 
     # Confusion matrix
     pred_classes = best_model.predict_classes(test_input)
