@@ -1,10 +1,19 @@
 ### PyCharm ###
 
 # .idea folders
-*/.idea
+*.idea
 
 # Environment
 */venv/
+*pycache*
 
 # Jupyter Notebook checkpoints
 */.ipynb_checkpoints
+
+# swap files
+*.swp
+
+# Notebooks not to be commited
+QN_*.ipynb
+
+
